@@ -32,7 +32,7 @@ jobs:
         with:
           script: |
             const title = process.env.TITLE;
-            console.log(`PR title: -> ${title}`);
+            console.log(`PR title: --> ${title}`);
             if (title.startsWith('octocat')) {
               console.log("PR title starts with 'octocat'");
             } else {
