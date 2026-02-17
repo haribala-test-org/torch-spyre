@@ -1,30 +1,23 @@
 
-# To bring up a new runner
 
-1. Bring up the pod with pod.yaml
+## Usage
 
-```shell
-oc create -f pod.yaml
-```
+### Deploying Runners
 
-1. Go to https://github.com/haribala-test-org/torch-spyre/settings/actions/runners
 
-2. Click "add runner" and it will give you a command like this with a token
+1. Login to the AIU cluster
 
-```shell
-./config.sh --url https://github.com/haribala-test-org/torch-spyre --token AE7TWWxxxxx
-```
+2. Modify the `values.yaml` file. In particular you need to set the token in the `secret.data` section.
+You can get the token by going to your repo/org > settings > actions > click the "new runner" button
 
-1. Go inside the pod and run the above command
+3. Deploy
 
 ```shell
-oc exec -it <pod name> bash
+helm install myrelease .
 ```
 
-1. Accept all the default settings
+### Running Workflows
 
-2. To start the GitHub actions runner in the background. NOTE: Can't use `./svc.sh` because it requires sudo/root user
+Just make a PR and it should run existing workflows like the linter.
 
-```shell
-nohup ./run.sh &
-```
+You can add more workflows, see the docs https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax
