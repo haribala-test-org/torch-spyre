@@ -57,3 +57,8 @@ This project contains 2 main folders for development:
 * `torch_spyre`: This will contain all required Python code to enable eager (currently this is being updated). This [link](https://github.com/pytorch/pytorch/tree/v2.9.1/test/cpp_extensions/open_registration_extension) describes the design principles we follows. For the most part, all that will be necessary from a Python standpoint is registering the device with PrivateUse1.
 
 * `torch_spyre/csrc`: This will be where all of the Spyre-specific implementations of PyTorch tensor ops / management functions will be.
+
+## Development
+### CI/CD
+
+- The [selfhostedghactionsrunner](./selfhostedghactionsrunner/) folder contains instructions for deploying the GitHub actions based CI/CD pipeline. 
