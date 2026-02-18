@@ -61,4 +61,4 @@ This project contains 2 main folders for development:
 ## Development
 ### CI/CD
 
-- The [selfhostedghactionsrunner](./selfhostedghactionsrunner/) folder contains instructions for deploying the GitHub actions based CI/CD pipeline. 
+* The [selfhostedghactionsrunner](./selfhostedghactionsrunner/) folder contains instructions for deploying the GitHub actions based CI/CD pipeline.
