@@ -1,0 +1,87 @@
+---
+template:
+  spec:
+    schedulerName: spyre-scheduler
+    securityContext:
+      seccompProfile:
+        type: RuntimeDefault
+    containers:
+      - resources:
+          limits:
+            ibm.com/spyre_pf: '1'
+          requests:
+            ibm.com/spyre_pf: '1'
+        terminationMessagePath: /dev/termination-log
+        image: us.icr.io/wxpe-cicd-internal/amd64/torch-aiu-runtime-dev:latest
+        #image: us.icr.io/wxpe-cicd-internal/amd64/torch-aiu-runtime-dev:dev-2026_02_10-120126
+        imagePullPolicy: Always
+        # ----------------------------------
+        # The container name is VERY IMPORTANT for the arc controller
+        # to inject the token as an env var ACTIONS_RUNNER_INPUT_JITCONFIG
+        # https://github.com/actions/actions-runner-controller/blob/9de09f56ebe234502a503878c232255a4bc1676e/controllers/actions.github.com/resourcebuilder.go#L630-L634
+        # name: app
+        name: runner
+        # ----------------------------------
+        command:
+          - bash
+          - -c
+          - |
+              python3 -m venv torch-spyre-venv --system-site-packages
+              source ./torch-spyre-venv/bin/activate
+
+              pip install expecttest wheel psutil pytest
+
+              cp /home/senuser/.bashrc ~/
+              cp /home/senuser/.bash_profile ~/
+
+              echo "source ./torch-spyre-venv/bin/activate" >> ~/.bashrc
+              # /usr/bin/pause
+              # Setup GitHub self-hosted runner
+              RUNNER_VERSION="2.331.0"
+              curl -o actions-runner-linux-x64-${RUNNER_VERSION}.tar.gz -L https://github.com/actions/runner/releases/download/v${RUNNER_VERSION}/actions-runner-linux-x64-${RUNNER_VERSION}.tar.gz
+              tar xzf ./actions-runner-linux-x64-${RUNNER_VERSION}.tar.gz
+              rm ./actions-runner-linux-x64-${RUNNER_VERSION}.tar.gz
+
+              # Create runner .env file to use existing Python venv for all jobs
+              # echo 'PATH=/dev/shm/torch-spyre-venv/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin' > .env
+              # echo 'VIRTUAL_ENV=/dev/shm/torch-spyre-venv' >> .env
+              # echo 'PYTHON=/dev/shm/torch-spyre-venv/bin/python' >> .env
+
+              export LD_LIBRARY_PATH="/usr/local/lib:$LD_LIBRARY_PATH"
+              # echo 'sleeping so the user can exec in...'
+              # tail -f /dev/null
+              # Run the runner
+              ./run.sh
+        workingDir: /dev/shm
+        env:
+          - name: HOME
+            value: /dev/shm
+          - name: HF_HOME
+            value: /dev/shm
+          - name: FLEX_COMPUTE
+            value: SENTIENT
+          - name: FLEX_DEVICE
+            value: PF
+          - name: TOKENIZERS_PARALLELISM
+            value: 'false'
+          - name: AIU_SETUP_MULTI_AIU
+            value: '1'
+          - name: LDFLAGS
+            value: "-L/usr/local/lib"
+        volumeMounts:
+          - name: dev-shm
+            mountPath: /dev/shm
+          # bash /etc/passwd to change our shell and homedir
+          #!- name: squad-shared-pvc
+          #!  mountPath: /etc/passwd
+          #!  subPath: myusername/.passwd
+        terminationMessagePolicy: File
+    imagePullSecrets:
+      - name: wxpe-cicd-vllm-iccr-internal
+      - name: wxpe-cicd-vllm-iccr-internal-uma-20feb2026
+    serviceAccount: default
+    volumes:
+      - name: dev-shm
+        emptyDir:
+          medium: Memory
+          sizeLimit: 64Gi
