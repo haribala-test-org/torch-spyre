@@ -22,9 +22,12 @@ permissions:
 jobs:
   linters:
     name: linters
+    # test13
     # runs-on: ubuntu-latest
     # runs-on: self-hosted
-    runs-on: arc-runner-set
+    # runs-on: arc-runner-set
+    # runs-on: arc-runner-set-my-image
+    runs-on: arc-runner-set-latest-image
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
       - uses: actions/github-script@v8
@@ -40,9 +43,19 @@ jobs:
               console.error("PR title did not start with 'octocat'");
             }
       # - uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
-      - uses: actions/setup-python@v6
-        with:
-          python-version: 3.12.12
+      # - uses: actions/setup-python@v6
+      #   with:
+      #     python-version: 3.12.12
+      - name: get some info
+        run: |
+          echo 'gather info start'
+          pwd
+          ls -la
+          whoami
+          id
+          echo "PATH $PATH"
+          echo "HOME $HOME"
+          echo 'gather info end'
       - name: Install uv
         uses: astral-sh/setup-uv@eac588ad8def6316056a12d4907a9d4d84ff7a3b # v7.1.3
         with:
