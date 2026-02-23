@@ -9,14 +9,14 @@ cd deploy-runners-helm-chart/
 
 1. Login to the AIU cluster
 
-2. Modify the `values.yaml` and the `run.sh file`. You should change the installation name to a new name for the runner set.
+1. Modify the `values.yaml` and the `run.sh file`. You should change the installation name to a new name for the runner set.
 In particular you need to set the token in the `GITHUB_PAT=xxxx` line.
 You can get the PAT by going to your profile -> create a classic token -> give repo and admin org roles
-See:
-- https://docs.github.com/en/actions/tutorials/use-actions-runner-controller/authenticate-to-the-api#deploying-using-personal-access-token-classic-authentication
-- https://docs.github.com/en/actions/tutorials/use-actions-runner-controller/authenticate-to-the-api#deploying-using-personal-access-token-classic-authentication
+    See:
+   - https://docs.github.com/en/actions/tutorials/use-actions-runner-controller/authenticate-to-the-api#deploying-using-personal-access-token-classic-authentication
+   - https://docs.github.com/en/actions/tutorials/use-actions-runner-controller/authenticate-to-the-api#deploying-using-personal-access-token-classic-authentication
 
-3. Deploy the new runner set.
+1. Deploy the new runner set.
 
 ```shell
 ./run.sh
