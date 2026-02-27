@@ -131,12 +131,7 @@ jobs:
           echo "pytest EXIT_CODE: ${EXIT_CODE}"
           if [[ "$EXIT_CODE" != '0' ]] ; then
             echo 'pytest fail, sleeping so the user can exec in...'
-            # tail -f /dev/null
-            # Busy waiting loop: consumes CPU cycles doing nothing useful
-            while [[ ! -f "STOP_WAITING_AND_PROCEED" ]] ; do
-              echo 'sleeping for a few seconds...'
-              sleep 10
-            done
+            tail -f /dev/null
           else
             echo 'pytest success'
           fi
