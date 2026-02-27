@@ -25,7 +25,8 @@ jobs:
     # runs-on: self-hosted
     # runs-on: arc-runner-set
     # runs-on: arc-runner-set-my-image
-    runs-on: arc-runner-set-latest-image
+    # runs-on: arc-runner-set-latest-image
+    runs-on: arc-runner-set-latest-image-1
     timeout-minutes: 30
     env:
       CI: ''
@@ -123,4 +124,15 @@ jobs:
       - name: Install package with test dependencies
         run: pip install -e . --no-deps --no-build-isolation -vvv --verbose
       - name: Run unit tests
-        run: pytest tests/ -vvv -s
+        run: |
+          echo 'Run unit tests start'
+          pytest tests/ -vvv -s || EXIT_CODE=$?
+          EXIT_CODE=${EXIT_CODE:-0}
+          echo "pytest EXIT_CODE: ${EXIT_CODE}"
+          if [[ "$EXIT_CODE" != '0' ]] ; then
+            echo 'pytest fail, sleeping so the user can exec in...'
+            tail -f /dev/null
+          else
+            echo 'pytest success'
+          fi
+          echo 'Run unit tests end'

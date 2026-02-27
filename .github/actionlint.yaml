@@ -6,3 +6,4 @@ self-hosted-runner:
     - arc-runner-set
     - arc-runner-set-my-image
     - arc-runner-set-latest-image
+    - arc-runner-set-latest-image-1
