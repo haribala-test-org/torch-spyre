@@ -124,4 +124,13 @@ jobs:
       - name: Install package with test dependencies
         run: pip install -e . --no-deps --no-build-isolation -vvv --verbose
       - name: Run unit tests
-        run: pytest tests/ -vvv -s
+        run: |
+          pytest tests/ -vvv -s
+          EXIT_CODE=$?
+          echo "pytest EXIT_CODE: ${EXIT_CODE}"
+          if [[ "$EXIT_CODE" != '0' ]] ; then
+            echo 'pytest fail, sleeping so the user can exec in...'
+            tail -f /dev/null
+          else
+            echo 'pytest success'
+          fi
