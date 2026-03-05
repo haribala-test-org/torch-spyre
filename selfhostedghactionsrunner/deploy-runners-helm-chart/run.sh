@@ -5,13 +5,15 @@
 
 # INSTALLATION_NAME=self-hosted
 # INSTALLATION_NAME="arc-runner-set-latest-image"
-INSTALLATION_NAME="arc-runner-set-latest-image-1"
+# INSTALLATION_NAME="arc-runner-set-latest-image-1"
+INSTALLATION_NAME="official-torch-spyre-org-arc-runner-set"
 NAMESPACE="arc-runners"
 GITHUB_CONFIG_URL=https://github.com/haribala-test-org/
 GITHUB_PAT=xxxx
-SECRET_NAME=hari-test-org-arc-runner-set-secret
-# DRY_RUN="--dry-run"
-DRY_RUN=""
+# SECRET_NAME=hari-test-org-arc-runner-set-secret
+SECRET_NAME="${INSTALLATION_NAME}-secret"
+DRY_RUN="--dry-run"
+# DRY_RUN=""
 
 oc project "${NAMESPACE}"
     # --set githubConfigSecret.github_token="${GITHUB_PAT}" \
