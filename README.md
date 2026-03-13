@@ -7,6 +7,14 @@ This project contains the PyTorch layer C++ and Python code for supporting the [
 Building this project currently requires a development build of the IBM Spyre Software Stack.
 If you are within IBM, instructions can be found in the internal `#aiu-inductor` slack channel.
 
+## Contributing
+
+Install and run pre-commit and commit any formatting changes made by the hooks
+
+```shell
+pre-commit run --all-files
+```
+
 ## How to Try It Out
 
 Non-interactive, simple script:
@@ -49,3 +57,8 @@ This project contains 2 main folders for development:
 * `torch_spyre`: This will contain all required Python code to enable eager (currently this is being updated). This [link](https://github.com/pytorch/pytorch/tree/v2.9.1/test/cpp_extensions/open_registration_extension) describes the design principles we follows. For the most part, all that will be necessary from a Python standpoint is registering the device with PrivateUse1.
 
 * `torch_spyre/csrc`: This will be where all of the Spyre-specific implementations of PyTorch tensor ops / management functions will be.
+
+## Development
+### CI/CD
+
+* The [selfhostedghactionsrunner](./selfhostedghactionsrunner/) folder contains instructions for deploying the GitHub actions based CI/CD pipeline.
