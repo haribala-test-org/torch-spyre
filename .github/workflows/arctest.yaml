@@ -1,0 +1,12 @@
+name: Actions Runner Controller Demo
+on:
+  workflow_dispatch: null
+
+jobs:
+  Explore-GitHub-Actions:
+    # You need to use the INSTALLATION_NAME from the previous step
+    # runs-on: arc-runner-set
+    # runs-on: arc-runner-set-my-image
+    runs-on: arc-runner-set-latest-image-1
+    steps:
+      - run: echo "🎉 This job uses runner scale set runners!"
