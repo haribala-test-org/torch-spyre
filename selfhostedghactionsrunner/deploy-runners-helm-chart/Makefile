@@ -11,7 +11,8 @@ GITHUB_CONFIG_URL ?= https://github.com/haribala-test-org/ # 17th March 2026, th
 # INSTALLATION_NAME ?= official-aiu-x86-64-arc-runner-set
 # --------------------
 # 17th March 2026, this is the app for haribala-test-org
-INSTALLATION_NAME ?= hb-test-org-runners-1
+# INSTALLATION_NAME ?= hb-test-org-runners-1
+INSTALLATION_NAME ?= hb-test-org-runners-2
 K8S_SECRET_NAME ?= ${INSTALLATION_NAME}-secret
 # --------------------
 # RUNNER_SET_PRIVATE_KEY_PEM ?= official-torch-spyre-github-app-private.pem
