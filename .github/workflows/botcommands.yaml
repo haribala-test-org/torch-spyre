@@ -24,6 +24,22 @@ jobs:
       checks: write
       contents: read
 
+  create-pr-comment:
+    needs: call-another-workflow
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/github-script@v8
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          # https://github.com/actions/github-script?tab=readme-ov-file#comment-on-an-issue
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: '🚀 Launching the tests!',
+            });
+
   # checkprcomment:
   #   if: |
   #     (github.event_name == 'issue_comment' && startsWith(github.event.comment.body, 'bot:test')) ||
