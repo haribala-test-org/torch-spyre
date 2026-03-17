@@ -4,16 +4,27 @@ DRY_RUN ?=
 K8S_CLI ?= oc
 K8S_OPERATOR_NAMESPACE ?= arc-systems
 K8S_NAMESPACE ?= arc-runners
-GITHUB_CONFIG_URL ?= https://github.com/torch-spyre/
+# GITHUB_CONFIG_URL ?= https://github.com/torch-spyre/
+GITHUB_CONFIG_URL ?= https://github.com/haribala-test-org/ # 17th March 2026, this is the app for haribala-test-org
 # INSTALLATION_NAME ?= official-torch-spyre-org-arc-runner-set
-INSTALLATION_NAME ?= official-aiu-x86-64-arc-runner-set
+# INSTALLATION_NAME ?= official-aiu-x86-64-arc-runner-set
+# --------------------
+# 17th March 2026, this is the app for haribala-test-org
+INSTALLATION_NAME ?= hb-test-org-runners-1
 K8S_SECRET_NAME ?= ${INSTALLATION_NAME}-secret
+# --------------------
 # RUNNER_SET_PRIVATE_KEY_PEM ?= official-torch-spyre-github-app-private.pem
 # GITHUB_APP_ID ?= 2356116
 # GITHUB_APP_INSTALLATION_ID ?= 96555807
-RUNNER_SET_PRIVATE_KEY_PEM ?= spyre-ci.2026-03-05.private-key.pem
-GITHUB_APP_ID ?= 3013805
-GITHUB_APP_INSTALLATION_ID ?= 114181434
+# RUNNER_SET_PRIVATE_KEY_PEM ?= spyre-ci.2026-03-05.private-key.pem
+# GITHUB_APP_ID ?= 3013805
+# GITHUB_APP_INSTALLATION_ID ?= 114181434
+# --------------------
+# 17th March 2026, this is the app for haribala-test-org
+RUNNER_SET_PRIVATE_KEY_PEM ?= github_app_private_key.pem
+GITHUB_APP_ID ?= 2956532 # this is the app for haribala-test-org
+GITHUB_APP_INSTALLATION_ID ?= 112640796 # this is the app for haribala-test-org
+# --------------------
 
 ECHO_DELIM ?= ----------------------------------
 
