@@ -5,14 +5,21 @@ K8S_CLI ?= oc
 MAX_GHA_RUNNERS=128 # keep it roughly the same as the number of spyre cards
 K8S_OPERATOR_NAMESPACE ?= arc-systems
 K8S_NAMESPACE ?= arc-runners
-# GITHUB_CONFIG_URL ?= https://github.com/torch-spyre/
-GITHUB_CONFIG_URL ?= https://github.com/haribala-test-org/ # 17th March 2026, this is the app for haribala-test-org
+# --------------------
+# 17th March 2026, this is the official runner set
+GITHUB_CONFIG_URL ?= https://github.com/torch-spyre/
+# --------------------
+# 17th March 2026, this is the app for haribala-test-org
+# GITHUB_CONFIG_URL ?= https://github.com/haribala-test-org/
+# --------------------
+# 17th March 2026, this is the official runner set
 # INSTALLATION_NAME ?= official-torch-spyre-org-arc-runner-set
 # INSTALLATION_NAME ?= official-aiu-x86-64-arc-runner-set
+INSTALLATION_NAME ?= official-aiu-x86-64-arc-runner-set-v1
 # --------------------
 # 17th March 2026, this is the app for haribala-test-org
 # INSTALLATION_NAME ?= hb-test-org-runners-1
-INSTALLATION_NAME ?= hb-test-org-runners-2
+# INSTALLATION_NAME ?= hb-test-org-runners-2
 K8S_SECRET_NAME ?= ${INSTALLATION_NAME}-secret
 # --------------------
 # RUNNER_SET_PRIVATE_KEY_PEM ?= official-torch-spyre-github-app-private.pem
@@ -34,9 +41,14 @@ K8S_SECRET_NAME ?= ${INSTALLATION_NAME}-secret
 # https://github.com/organizations/haribala-test-org/settings/apps/hb-test-org-runners-1-17march2026
 # App ID: 3114642
 # https://github.com/organizations/haribala-test-org/settings/installations/117053027
-RUNNER_SET_PRIVATE_KEY_PEM ?= hb-test-org-runners-1-17march2026.2026-03-17.private-key.pem
-GITHUB_APP_ID ?= 3114642
-GITHUB_APP_INSTALLATION_ID ?= 117053027
+# RUNNER_SET_PRIVATE_KEY_PEM ?= hb-test-org-runners-1-17march2026.2026-03-17.private-key.pem
+# GITHUB_APP_ID ?= 3114642
+# GITHUB_APP_INSTALLATION_ID ?= 117053027
+# --------------------
+# 17th March 2026, this is the official runner set
+RUNNER_SET_PRIVATE_KEY_PEM ?= spyre-ci.2026-03-05.private-key.pem
+GITHUB_APP_ID ?= 3013805
+GITHUB_APP_INSTALLATION_ID ?= 114181434
 # --------------------
 
 ECHO_DELIM ?= ----------------------------------
