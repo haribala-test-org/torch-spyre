@@ -7,3 +7,5 @@ self-hosted-runner:
     - arc-runner-set-my-image
     - arc-runner-set-latest-image
     - arc-runner-set-latest-image-1
+    - hb-test-org-runners-1
+    - official-aiu-x86-64-arc-runner-set
