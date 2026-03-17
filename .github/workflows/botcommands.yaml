@@ -40,6 +40,7 @@ jobs:
               body: '🚀 Launching the tests!',
             });
 
+  # test 1
   # checkprcomment:
   #   if: |
   #     (github.event_name == 'issue_comment' && startsWith(github.event.comment.body, 'bot:test')) ||
