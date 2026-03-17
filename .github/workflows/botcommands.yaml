@@ -11,21 +11,11 @@ on:
     types: [submitted]
 
 jobs:
-  call-another-workflow:
-    # uses: {owner}/{repo}/.github/workflows/{filename}@{ref} for reusable workflows in public and private repositories.
-    # uses: ./.github/workflows/{filename} for reusable workflows in the same repository.
-    # uses: octo-org/example-repo/.github/workflows/reusable-workflow.yml@main
+  create-pr-comment:
     if: |
       (github.event_name == 'issue_comment' && startsWith(github.event.comment.body, 'bot:test')) ||
       (github.event_name == 'pull_request_review_comment' && startsWith(github.event.comment.body, 'bot:test')) ||
       (github.event_name == 'pull_request_review' && startsWith(github.event.review.body, 'bot:test'))
-    uses: ./.github/workflows/runtests.yaml
-    permissions:
-      checks: write
-      contents: read
-
-  create-pr-comment:
-    needs: call-another-workflow
     runs-on: ubuntu-latest
     steps:
       - uses: actions/github-script@v8
@@ -39,6 +29,16 @@ jobs:
               repo: context.repo.repo,
               body: '🚀 Launching the tests!',
             });
+
+  call-another-workflow:
+    needs: create-pr-comment
+    # uses: {owner}/{repo}/.github/workflows/{filename}@{ref} for reusable workflows in public and private repositories.
+    # uses: ./.github/workflows/{filename} for reusable workflows in the same repository.
+    # uses: octo-org/example-repo/.github/workflows/reusable-workflow.yml@main
+    uses: ./.github/workflows/runtests.yaml
+    permissions:
+      checks: write
+      contents: read
 
   # checkprcomment:
   #   if: |
