@@ -6,13 +6,7 @@ template:
       seccompProfile:
         type: RuntimeDefault
     containers:
-      - resources:
-          limits:
-            ibm.com/spyre_pf: '1'
-          requests:
-            ibm.com/spyre_pf: '1'
-        terminationMessagePath: /dev/termination-log
-        image: us.icr.io/wxpe-cicd-internal/amd64/torch-aiu-runtime-dev:latest
+      - image: us.icr.io/wxpe-cicd-internal/amd64/torch-aiu-runtime-dev:latest
         #image: us.icr.io/wxpe-cicd-internal/amd64/torch-aiu-runtime-dev:dev-2026_02_10-120126
         imagePullPolicy: Always
         # ----------------------------------
@@ -22,37 +16,47 @@ template:
         # name: app
         name: runner
         # ----------------------------------
+        resources:
+          requests:
+            cpu: "2"
+            memory: "64Gi"
+            # ephemeral-storage: "128Gi"
+            ibm.com/spyre_pf: "1"
+          limits:
+            cpu: "2"
+            memory: "64Gi"
+            # ephemeral-storage: "128Gi"
+            ibm.com/spyre_pf: "1"
+        workingDir: /dev/shm
         command:
           - bash
           - -c
           - |
-              python3 -m venv torch-spyre-venv --system-site-packages
-              source ./torch-spyre-venv/bin/activate
+            python3 -m venv torch-spyre-venv --system-site-packages
+            source ./torch-spyre-venv/bin/activate
 
-              pip install expecttest wheel psutil pytest
+            pip install expecttest wheel psutil pytest
 
-              cp /home/senuser/.bashrc ~/
-              cp /home/senuser/.bash_profile ~/
+            cp /home/senuser/.bashrc ~/
+            cp /home/senuser/.bash_profile ~/
+            echo "source ./torch-spyre-venv/bin/activate" >> ~/.bashrc
 
-              echo "source ./torch-spyre-venv/bin/activate" >> ~/.bashrc
-              # /usr/bin/pause
-              # Setup GitHub self-hosted runner
-              RUNNER_VERSION="2.331.0"
-              curl -o actions-runner-linux-x64-${RUNNER_VERSION}.tar.gz -L https://github.com/actions/runner/releases/download/v${RUNNER_VERSION}/actions-runner-linux-x64-${RUNNER_VERSION}.tar.gz
-              tar xzf ./actions-runner-linux-x64-${RUNNER_VERSION}.tar.gz
-              rm ./actions-runner-linux-x64-${RUNNER_VERSION}.tar.gz
+            # Setup GitHub self-hosted runner
+            RUNNER_VERSION="2.331.0"
+            curl -o actions-runner-linux-x64-${RUNNER_VERSION}.tar.gz -L https://github.com/actions/runner/releases/download/v${RUNNER_VERSION}/actions-runner-linux-x64-${RUNNER_VERSION}.tar.gz
+            tar xzf ./actions-runner-linux-x64-${RUNNER_VERSION}.tar.gz
+            rm ./actions-runner-linux-x64-${RUNNER_VERSION}.tar.gz
 
-              # Create runner .env file to use existing Python venv for all jobs
-              # echo 'PATH=/dev/shm/torch-spyre-venv/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin' > .env
-              # echo 'VIRTUAL_ENV=/dev/shm/torch-spyre-venv' >> .env
-              # echo 'PYTHON=/dev/shm/torch-spyre-venv/bin/python' >> .env
+            # Create runner .env file to use existing Python venv for all jobs
+            # echo 'PATH=/dev/shm/torch-spyre-venv/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin' > .env
+            # echo 'VIRTUAL_ENV=/dev/shm/torch-spyre-venv' >> .env
+            # echo 'PYTHON=/dev/shm/torch-spyre-venv/bin/python' >> .env
 
-              export LD_LIBRARY_PATH="/usr/local/lib:$LD_LIBRARY_PATH"
-              # echo 'sleeping so the user can exec in...'
-              # tail -f /dev/null
-              # Run the runner
-              ./run.sh
-        workingDir: /dev/shm
+            export LD_LIBRARY_PATH="/usr/local/lib:$LD_LIBRARY_PATH"
+            # echo 'sleeping so the user can exec in...'
+            # tail -f /dev/null
+            # Start the runner
+            ./run.sh
         env:
           - name: HOME
             value: /dev/shm

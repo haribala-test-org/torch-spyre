@@ -2,6 +2,7 @@
 DRY_RUN ?= 
 # DRY_RUN ?= "--dry-run"
 K8S_CLI ?= oc
+MAX_GHA_RUNNERS=128 # keep it roughly the same as the number of spyre cards
 K8S_OPERATOR_NAMESPACE ?= arc-systems
 K8S_NAMESPACE ?= arc-runners
 # GITHUB_CONFIG_URL ?= https://github.com/torch-spyre/
@@ -21,9 +22,20 @@ K8S_SECRET_NAME ?= ${INSTALLATION_NAME}-secret
 # GITHUB_APP_INSTALLATION_ID ?= 114181434
 # --------------------
 # 17th March 2026, this is the app for haribala-test-org
-RUNNER_SET_PRIVATE_KEY_PEM ?= github_app_private_key.pem
-GITHUB_APP_ID ?= 2956532 # this is the app for haribala-test-org
-GITHUB_APP_INSTALLATION_ID ?= 112640796 # this is the app for haribala-test-org
+# https://github.com/organizations/haribala-test-org/settings/installations/112640796
+# https://github.com/organizations/haribala-test-org/settings/apps/hari-test-ord-torch-spyre-cicd-bot
+# App ID: 2956532
+# RUNNER_SET_PRIVATE_KEY_PEM ?= github_app_private_key.pem
+# GITHUB_APP_ID ?= 2956532 # this is the app for haribala-test-org
+# GITHUB_APP_INSTALLATION_ID ?= 112640796 # this is the app for haribala-test-org
+# --------------------
+# 17th March 2026, this is the app for haribala-test-org
+# https://github.com/organizations/haribala-test-org/settings/apps/hb-test-org-runners-1-17march2026
+# App ID: 3114642
+# https://github.com/organizations/haribala-test-org/settings/installations/117053027
+RUNNER_SET_PRIVATE_KEY_PEM ?= hb-test-org-runners-1-17march2026.2026-03-17.private-key.pem
+GITHUB_APP_ID ?= 3114642
+GITHUB_APP_INSTALLATION_ID ?= 117053027
 # --------------------
 
 ECHO_DELIM ?= ----------------------------------
@@ -72,6 +84,7 @@ deploy-runner-set: switch-namespace
 		-f arc-runner-set-latest-image-values.yaml \
 		--set githubConfigUrl="${GITHUB_CONFIG_URL}" \
 		--set githubConfigSecret="${K8S_SECRET_NAME}" \
+		--set maxRunners=${MAX_GHA_RUNNERS} \
 		oci://ghcr.io/actions/actions-runner-controller-charts/gha-runner-scale-set
 
 .PHONY: undeploy-runner-set
