@@ -1,4 +1,4 @@
-name: 'Bot Commands'
+name: Bot Commands
 
 on:
   issue_comment:
