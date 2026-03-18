@@ -7,7 +7,7 @@
 cd deploy-runners-helm-chart/
 ```
 
-1. Login to the AIU cluster https://console-openshift-console.apps.torch-cicd.spyre.res.ibm.com/k8s/ns/torch-spyre-cicd/core~v1~Pod
+1. Login to the AIU cluster
 
 1. Modify the `run.sh file` (and if you really want also the `arc-runner-set-latest-image-values.yaml` file)
    - You should change the installation name to a new name for the runner set.
@@ -29,7 +29,7 @@ On a successful deployment you should see
 
 ```shell
 $ ./run.sh
-Already on project "arc-runners" on server "https://api.torch-cicd.spyre.res.ibm.com:6443".
+Already on project "arc-runners" on server "https://zzzz.yyyy.xxxx.cluster.com:6443".
 level=DEBUG msg="Original chart version" version=""
 level=DEBUG msg="set up default downloader cache"
 
