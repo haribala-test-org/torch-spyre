@@ -1,7 +1,12 @@
 name: tests
 
 on:
-  workflow_call: {}
+  workflow_call:
+    inputs:
+      checkout_ref:
+        description: 'Git ref to checkout (e.g. refs/pull/N/head)'
+        required: true
+        type: string
 # on:
 #   push:
 #     branches: [main]
@@ -10,7 +15,7 @@ on:
 #     branches: [main]
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  group: ${{ github.workflow }}-${{ inputs.checkout_ref }}
   cancel-in-progress: true
 
 defaults:
@@ -19,7 +24,6 @@ defaults:
 
 permissions:
   contents: read
-  checks: write
 
 jobs:
   test:
@@ -30,6 +34,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          ref: ${{ inputs.checkout_ref }}
       - name: get some info
         run: |
           echo 'gather info start'
