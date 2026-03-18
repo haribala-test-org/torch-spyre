@@ -4,7 +4,7 @@ on:
   workflow_call:
     inputs:
       checkout_ref:
-        description: 'Git ref to checkout (e.g. refs/pull/N/head)'
+        description: Git ref to checkout (e.g. refs/pull/N/head)
         required: true
         type: string
 # on:
