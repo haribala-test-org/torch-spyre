@@ -2,7 +2,7 @@
 requires = [
     # any change here should be reflected in the build dependencies below
     "build",  # only required to build torch_sendnn
-    "cmake>=3.27,<4.0.0",
+    "cmake>=3.27,<5.0.0",
     "expecttest>=0.3.0",
     "hypothesis",
     "jinja2",
@@ -37,7 +37,7 @@ dynamic = ["version"]
 build = [ # no-isolation build 
     # any change here should be reflected in the build system above
     "build",  # only required to build torch_sendnn
-    "cmake>=3.27,<4.0.0",
+    "cmake>=3.27,<5.0.0",
     "expecttest>=0.3.0",
     "hypothesis",
     "jinja2",
