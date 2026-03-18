@@ -7,15 +7,18 @@ on:
         description: Git ref to checkout (e.g. refs/pull/N/head)
         required: true
         type: string
-# on:
-#   push:
-#     branches: [main]
-#     tags: ['*']
-#   pull_request:
-#     branches: [main]
+      head_sha:
+        description: PR head SHA for commit status reporting
+        required: true
+        type: string
+  push:
+    branches: [main]
+    tags: ['*']
+  pull_request:
+    branches: [main]
 
 concurrency:
-  group: ${{ github.workflow }}-${{ inputs.checkout_ref }}
+  group: ${{ github.workflow }}-${{ inputs.checkout_ref || github.ref }}
   cancel-in-progress: true
 
 defaults:
@@ -24,10 +27,40 @@ defaults:
 
 permissions:
   contents: read
+  statuses: write
 
 jobs:
+  set-pending:
+    name: Set pending commit status
+    if: github.event_name != 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set pending commit status
+        uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8
+        env:
+          INPUT_HEAD_SHA: ${{ inputs.head_sha }}
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const sha = process.env.INPUT_HEAD_SHA || context.payload.pull_request?.head?.sha;
+            if (!sha) {
+              core.info('No head SHA available, skipping status update');
+              return;
+            }
+            await github.rest.repos.createCommitStatus({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              sha: sha,
+              state: 'pending',
+              context: 'tests / Run Spyre unit tests',
+              description: 'Tests are running...',
+              target_url: `${process.env.GITHUB_SERVER_URL}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`,
+            });
+
   test:
     name: Run Spyre unit tests
+    needs: [set-pending]
+    if: always() && (needs.set-pending.result == 'success' || needs.set-pending.result == 'skipped')
     runs-on: hb-test-org-runners-2
     timeout-minutes: 30
     # env: {}
@@ -35,7 +68,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
-          ref: ${{ inputs.checkout_ref }}
+          ref: ${{ inputs.checkout_ref || '' }}
       - name: get some info
         run: |
           echo 'gather info start'
@@ -63,3 +96,37 @@ jobs:
           fi
           echo 'Run unit tests end'
           exit "$EXIT_CODE"
+
+  update-status:
+    name: Update commit status
+    needs: [set-pending, test]
+    if: always() && github.event_name != 'push' && needs.set-pending.result != 'failure'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set final commit status
+        uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8
+        env:
+          INPUT_HEAD_SHA: ${{ inputs.head_sha }}
+          TEST_RESULT: ${{ needs.test.result }}
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const sha = process.env.INPUT_HEAD_SHA || context.payload.pull_request?.head?.sha;
+            if (!sha) {
+              core.info('No head SHA available, skipping status update');
+              return;
+            }
+            const testResult = process.env.TEST_RESULT;
+            const state = testResult === 'success' ? 'success' : 'failure';
+            const description = testResult === 'success'
+              ? 'Tests passed'
+              : `Tests ${testResult}`;
+            await github.rest.repos.createCommitStatus({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              sha: sha,
+              state: state,
+              context: 'tests / Run Spyre unit tests',
+              description: description,
+              target_url: `${process.env.GITHUB_SERVER_URL}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`,
+            });
