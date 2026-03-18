@@ -1,0 +1,12 @@
+# Configuration related to self-hosted runner.
+self-hosted-runner:
+  # Labels of self-hosted runner in array of strings.
+  labels:
+    - self-hosted
+    - arc-runner-set
+    - arc-runner-set-my-image
+    - arc-runner-set-latest-image
+    - arc-runner-set-latest-image-1
+    - hb-test-org-runners-1
+    - hb-test-org-runners-2
+    - official-aiu-x86-64-arc-runner-set

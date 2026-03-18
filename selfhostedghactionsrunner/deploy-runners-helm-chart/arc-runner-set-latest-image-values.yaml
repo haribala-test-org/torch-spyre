@@ -1,0 +1,97 @@
+---
+template:
+  spec:
+    schedulerName: spyre-scheduler
+    securityContext:
+      seccompProfile:
+        type: RuntimeDefault
+    containers:
+      - image: us.icr.io/wxpe-cicd-internal/amd64/torch-aiu-runtime-dev:latest
+        #image: us.icr.io/wxpe-cicd-internal/amd64/torch-aiu-runtime-dev:dev-2026_02_10-120126
+        imagePullPolicy: Always
+        # ----------------------------------
+        # The container name is VERY IMPORTANT for the arc controller
+        # to inject the token as an env var ACTIONS_RUNNER_INPUT_JITCONFIG
+        # https://github.com/actions/actions-runner-controller/blob/9de09f56ebe234502a503878c232255a4bc1676e/controllers/actions.github.com/resourcebuilder.go#L630-L634
+        # name: app
+        name: runner
+        # ----------------------------------
+        resources:
+          requests:
+            cpu: "2"
+            memory: "64Gi"
+            # ephemeral-storage: "128Gi"
+            ibm.com/spyre_pf: "1"
+          limits:
+            cpu: "2"
+            memory: "64Gi"
+            # ephemeral-storage: "128Gi"
+            ibm.com/spyre_pf: "1"
+        workingDir: /dev/shm
+        command:
+          - bash
+          - -c
+          - |
+            # ----------------------------
+            MY_ENV_FILE='IyEvdXNyL2Jpbi9lbnYgYmFzaAoKZXhwb3J0IENJPQpleHBvcnQgUEFUSD0vZGV2L3NobS90b3JjaC1zcHlyZS12ZW52L2JpbjovZGV2L3NobS8ubG9jYWwvYmluOi9kZXYvc2htL2Jpbjovb3B0L3JoL2djYy10b29sc2V0LTE0L3Jvb3QvdXNyL2JpbjovdXNyL3NoYXJlL01vZHVsZXMvYmluOi9vcHQvaWJtL3NweXJlL3R2bS9iaW46L29wdC9pYm0vc3B5cmUvcnVudGltZS9iaW46L29wdC9pYm0vc3B5cmUvZGVlcHRvb2xzL2Jpbjovb3B0L2libS9zcHlyZS9zZW5saWIvYmluOi9vcHQvaWJtL3NweXJlL3NlbnRpbnlleGVjL2JpbjovdXNyL2xpYjY0L2NjYWNoZTovdXNyL2xvY2FsL3NiaW46L3Vzci9sb2NhbC9iaW46L3Vzci9zYmluOi91c3IvYmluOi9zYmluOi9iaW4KZXhwb3J0IExEX0xJQlJBUllfUEFUSD0vb3B0L3JoL2djYy10b29sc2V0LTE0L3Jvb3QvdXNyL2xpYjY0Oi9vcHQvcmgvZ2NjLXRvb2xzZXQtMTQvcm9vdC91c3IvbGliOi9vcHQvaWJtL3NweXJlL3R2bS9saWI6L29wdC9pYm0vc3B5cmUvcnVudGltZS9saWI6L29wdC9pYm0vc3B5cmUvZGVlcHRvb2xzL2xpYjovb3B0L2libS9zcHlyZS9zZW5saWIvbGliOi9vcHQvaWJtL3NweXJlL3NlbnRpbnlleGVjL2xpYjovb3B0L2libS9zcHlyZS9ydW50aW1lL2xpYjovb3B0L2libS9zcHlyZS9kZWVwdG9vbHMvbGliOi9vcHQvaWJtL3NweXJlL3NlbmxpYi9saWI6L29wdC9pYm0vc3B5cmUvc2VudGlueWV4ZWMvbGliCmV4cG9ydCBBSVVfVElFUl8xX1NFVF8wX1NJWkU9MQpleHBvcnQgQUlVQ0FSRE1HTVRfSU5TVEFMTF9ESVI9L29wdC9pYm0vc3B5cmUvYWl1Y2FyZG1nbXQKZXhwb3J0IERFRVBUT09MU19QQVRIPS9vcHQvaWJtL3NweXJlL2RlZXB0b29scy9zaGFyZQpleHBvcnQgUEtHX0NPTkZJR19QQVRIPS9vcHQvcmgvZ2NjLXRvb2xzZXQtMTQvcm9vdC91c3IvbGliNjQvcGtnY29uZmlnCmV4cG9ydCBOU1NfU0RCX1VTRV9DQUNIRT1GYWxzZQpleHBvcnQgRkxFWF9DT01QVVRFPVNFTlRJRU5UCmV4cG9ydCBMSUJfVkVSU0lPTl9GSUxFPS9vcHQvaWJtL3NweXJlL2NvbXBvbmVudHMudHh0CmV4cG9ydCBBSVVfU0VUVVBfTVVMVElfQUlVPTEKZXhwb3J0IFBDUF9ESVI9L29wdC9yaC9nY2MtdG9vbHNldC0xNC9yb290CmV4cG9ydCBUVk1fSU5TVEFMTF9ESVI9L29wdC9pYm0vc3B5cmUvdHZtCmV4cG9ydCBSVU5USU1FX0lOU1RBTExfRElSPS9vcHQvaWJtL3NweXJlL3J1bnRpbWUKZXhwb3J0IFBXRD0vZGV2L3NobQpleHBvcnQgU0VOX1BST0pFQ1RfUEFDS0FHRT0vcHJvamVjdF9wYWNrYWdlCmV4cG9ydCBNT0RVTEVTSE9NRT0vdXNyL3NoYXJlL01vZHVsZXMKZXhwb3J0IE1BTlBBVEg9L29wdC9yaC9nY2MtdG9vbHNldC0xNC9yb290L3Vzci9zaGFyZS9tYW46L3Vzci9zaGFyZS9tYW46CmV4cG9ydCBGTEVYX0RFVklDRT1QRgpleHBvcnQgQUlVX1RPUE9fRklMRT0vZXRjL2libS9zcHlyZS90b3BvLmpzb24KZXhwb3J0IExERkxBR1M9LUwvdXNyL2xvY2FsL2xpYgpleHBvcnQgVE9LRU5JWkVSU19QQVJBTExFTElTTT1GYWxzZQpleHBvcnQgSE9NRT0vZGV2L3NobQpleHBvcnQgTEFORz1DLnV0ZjgKZXhwb3J0IFZJUlRVQUxfRU5WPS9kZXYvc2htL3RvcmNoLXNweXJlLXZlbnYKZXhwb3J0IEFJVV9FTlZfRklMRT0vdG1wL2V0Yy9pYm0vc3B5cmUvYWl1X2Vudi5zaApleHBvcnQgcHliaW5kMTFfRElSPS91c3IvbG9jYWwvbGliL3B5dGhvbjMuMTIvc2l0ZS1wYWNrYWdlcy9weWJpbmQxMQpleHBvcnQgQUlVX1RJRVJfMF9OVU1fU0VUUz0xCmV4cG9ydCBERUVQVE9PTFNfSU5TVEFMTF9ESVI9L29wdC9pYm0vc3B5cmUvZGVlcHRvb2xzCmV4cG9ydCBJTkZPUEFUSD0vb3B0L3JoL2djYy10b29sc2V0LTE0L3Jvb3QvdXNyL3NoYXJlL2luZm8KZXhwb3J0IFNFTlRJTllFWEVDX0lOU1RBTExfRElSPS9vcHQvaWJtL3NweXJlL3NlbnRpbnlleGVjCmV4cG9ydCBQWVRIT05QQVRIPS9vcHQvaWJtL3NweXJlL3J1bnRpbWUvbGliOi9vcHQvaWJtL3NweXJlL3NlbmxpYi9saWI6L29wdC9pYm0vc3B5cmUvcnVudGltZS9saWI6L29wdC9pYm0vc3B5cmUvcnVudGltZS9saWI6L29wdC9pYm0vc3B5cmUvcnVudGltZS9saWIKZXhwb3J0IEFJVV9BVVRPR0VOX1NFTkxJQl9DT05GSUdfRklMRT0vdG1wL2V0Yy9pYm0vc3B5cmUvc2VubGliX2NvbmZpZy1hdXRvZ2VuLmpzb24KZXhwb3J0IExFU1NPUEVOPXx8L3Vzci9iaW4vbGVzc3BpcGUuc2ggJXMKZXhwb3J0IFNFTkxJQl9JTlNUQUxMX0RJUj0vb3B0L2libS9zcHlyZS9zZW5saWIKZXhwb3J0IE1MU0VSVkVSX1RWTV9JTlNUQUxMX0RJUj0vb3B0L2libS9zcHlyZS9tbHNlcnZlci10dm0KZXhwb3J0IFNFTlRJRU5UX0JBU0VfSU5TVEFMTF9ESVI9L29wdC9pYm0vc3B5cmUKZXhwb3J0IE1PRFVMRVNfUlVOX1FVQVJBTlRJTkU9TERfTElCUkFSWV9QQVRIIExEX1BSRUxPQUQKZXhwb3J0IFNITFZMPTEKZXhwb3J0IF9JQk1fQUlVX1NFVFVQPTEKZXhwb3J0IFJVTlRJTUVfRlVMTF9JTlNUQUxMX0RJUj0vb3B0L2libS9zcHlyZS9ydW50aW1lCmV4cG9ydCBPTVBfTlVNX1RIUkVBRFM9MTkyCmV4cG9ydCBERUJVR0lORk9EX0lNQV9DRVJUX1BBVEg9L2V0Yy9rZXlzL2ltYToKZXhwb3J0IEFJVV9USUVSXzFfTlVNX1NFVFM9MQpleHBvcnQgU0VORE5OX0RJUj0vb3B0L2libS9zcHlyZS9ydW50aW1lCmV4cG9ydCBTRU5ETk5fSU5TVEFMTF9ESVI9L29wdC9pYm0vc3B5cmUvcnVudGltZQpleHBvcnQgTU9EVUxFUEFUSD0vZXRjL3NjbC9tb2R1bGVmaWxlczovdXNyL3NoYXJlL01vZHVsZXMvbW9kdWxlZmlsZXM6L2V0Yy9tb2R1bGVmaWxlczovdXNyL3NoYXJlL21vZHVsZWZpbGVzCmV4cG9ydCBTRU5fQ09NTU9OX0hFQURFUlM9L29wdC9pYm0vc3B5cmUvcnVudGltZS9pbmNsdWRlCmV4cG9ydCBBSVVfV09STERfU0laRT0xCmV4cG9ydCBBSVVfVElFUl8wX1NFVF8wX1NJWkU9MQo='
+            echo "$MY_ENV_FILE" | base64 -d > set-env-vars.sh
+            source set-env-vars.sh
+            # ----------------------------
+
+            python3 -m venv torch-spyre-venv --system-site-packages
+            source ./torch-spyre-venv/bin/activate
+
+            pip install expecttest wheel psutil pytest
+
+            cp /home/senuser/.bashrc ~/
+            cp /home/senuser/.bash_profile ~/
+            echo "source ./torch-spyre-venv/bin/activate" >> ~/.bashrc
+
+            # Setup GitHub self-hosted runner
+            RUNNER_VERSION="2.331.0"
+            curl -o actions-runner-linux-x64-${RUNNER_VERSION}.tar.gz -L https://github.com/actions/runner/releases/download/v${RUNNER_VERSION}/actions-runner-linux-x64-${RUNNER_VERSION}.tar.gz
+            tar xzf ./actions-runner-linux-x64-${RUNNER_VERSION}.tar.gz
+            rm ./actions-runner-linux-x64-${RUNNER_VERSION}.tar.gz
+
+            # Create runner .env file to use existing Python venv for all jobs
+            # echo 'PATH=/dev/shm/torch-spyre-venv/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin' > .env
+            # echo 'VIRTUAL_ENV=/dev/shm/torch-spyre-venv' >> .env
+            # echo 'PYTHON=/dev/shm/torch-spyre-venv/bin/python' >> .env
+
+            export LD_LIBRARY_PATH="/usr/local/lib:$LD_LIBRARY_PATH"
+            # echo 'sleeping so the user can exec in...'
+            # tail -f /dev/null
+            # Start the runner
+            ./run.sh
+        env:
+          - name: HOME
+            value: /dev/shm
+          - name: HF_HOME
+            value: /dev/shm
+          - name: FLEX_COMPUTE
+            value: SENTIENT
+          - name: FLEX_DEVICE
+            value: PF
+          - name: TOKENIZERS_PARALLELISM
+            value: 'false'
+          - name: AIU_SETUP_MULTI_AIU
+            value: '1'
+          - name: LDFLAGS
+            value: "-L/usr/local/lib"
+        volumeMounts:
+          - name: dev-shm
+            mountPath: /dev/shm
+          # bash /etc/passwd to change our shell and homedir
+          #!- name: squad-shared-pvc
+          #!  mountPath: /etc/passwd
+          #!  subPath: myusername/.passwd
+        terminationMessagePolicy: File
+    imagePullSecrets:
+      - name: wxpe-cicd-vllm-iccr-internal
+      - name: wxpe-cicd-vllm-iccr-internal-uma-20feb2026
+    serviceAccount: default
+    volumes:
+      - name: dev-shm
+        emptyDir:
+          medium: Memory
+          sizeLimit: 64Gi
