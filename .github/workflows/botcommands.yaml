@@ -39,7 +39,7 @@ jobs:
     steps:
       - name: Get PR head SHA
         id: pr-info
-        uses: actions/github-script@v8
+        uses: actions/github-script@v9
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
@@ -52,7 +52,7 @@ jobs:
             core.setOutput('head_sha', pr.data.head.sha);
             core.setOutput('pr_ref', `refs/pull/${prNumber}/head`);
       - name: Comment on PR
-        uses: actions/github-script@v8
+        uses: actions/github-script@v9
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
@@ -64,7 +64,7 @@ jobs:
               body: '🚀 Launching the tests!',
             });
       - name: Set pending commit status
-        uses: actions/github-script@v8
+        uses: actions/github-script@v9
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
@@ -95,7 +95,7 @@ jobs:
       statuses: write
     steps:
       - name: Set final commit status
-        uses: actions/github-script@v8
+        uses: actions/github-script@v9
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
